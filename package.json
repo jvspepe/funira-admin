@@ -10,11 +10,15 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fontsource-variable/montserrat": "^5.0.19",
+    "@fontsource-variable/space-grotesk": "^5.0.18",
     "firebase": "^10.12.2",
+    "nanoid": "^5.0.7",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hook-form": "^7.52.0",
-    "react-router-dom": "^6.24.0"
+    "react-router-dom": "^6.24.0",
+    "react-textarea-autosize": "^8.5.3"
   },
   "devDependencies": {
     "@hookform/devtools": "^4.3.1",
