@@ -13,7 +13,7 @@ const Home = () => {
     <div className="container mx-auto flex h-screen items-center justify-center">
       <Card>
         <CardHeader>
-          <CardTitle className="text-red-500">Painel Funira</CardTitle>
+          <CardTitle className="text-xl text-blue-500">Painel Funira</CardTitle>
           <CardDescription>Bem-vindo!</CardDescription>
         </CardHeader>
         <CardContent className="flex items-center gap-4">
