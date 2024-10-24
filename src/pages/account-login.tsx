@@ -49,11 +49,7 @@ const AccountLogin = () => {
   return (
     <div className="container mx-auto flex h-screen items-center justify-center">
       <Card className="relative min-w-[20rem]">
-        <Button
-          asChild
-          variant="secondary"
-          className="absolute bottom-[calc(100%_+_0.5rem)]"
-        >
+        <Button asChild className="absolute bottom-[calc(100%_+_0.5rem)]">
           <Link to="/">
             <ChevronLeftIcon />
             Voltar
