@@ -1,14 +1,19 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import "@fontsource-variable/montserrat";
 import "@fontsource-variable/space-grotesk";
-import App from "./App.tsx";
 import "./index.css";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import CreateProduct from "./pages/CreateProduct.tsx";
-import AllProducts from "./pages/AllProducts.tsx";
-import RootLayout from "./layouts/RootLayout.tsx";
-import CreateCategory from "./pages/CreateCategory.tsx";
+import { AuthProvider } from "./contexts/AuthContext.tsx";
+import AccountCreate from "./pages/account-create.tsx";
+import AccountLogin from "./pages/account-login.tsx";
+import Products from "./pages/products.tsx";
+import Categories from "./pages/categories.tsx";
+
+import Dashboard from "./pages/dashboard.tsx";
+import Home from "./pages/home.tsx";
+import MainLayout from "./layouts/MainLayout.tsx";
+import ProtectedRoute from "./routes/ProtectedRoute.tsx";
 
 /* 
   Images must be 4:3 ratio!
@@ -16,23 +21,41 @@ import CreateCategory from "./pages/CreateCategory.tsx";
 
 const router = createBrowserRouter([
   {
-    element: <RootLayout />,
+    path: "/",
+    element: <Home />,
+  },
+  {
+    path: "/account-create",
+    element: <AccountCreate />,
+  },
+  {
+    path: "/account-login",
+    element: <AccountLogin />,
+  },
+  {
+    element: <ProtectedRoute />,
     children: [
       {
-        path: "/",
-        element: <App />,
-      },
-      {
-        path: "/produtos",
-        element: <AllProducts />,
-      },
-      {
-        path: "/adicionar-produto",
-        element: <CreateProduct />,
-      },
-      {
-        path: "/adicionar-categoria",
-        element: <CreateCategory />,
+        element: <MainLayout />,
+        children: [
+          {
+            path: "/dashboard",
+            children: [
+              {
+                index: true,
+                element: <Dashboard />,
+              },
+              {
+                path: "produtos",
+                element: <Products />,
+              },
+              {
+                path: "categorias",
+                element: <Categories />,
+              },
+            ],
+          },
+        ],
       },
     ],
   },
@@ -40,6 +63,9 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+      {/* <App /> */}
+    </AuthProvider>
   </React.StrictMode>,
 );
