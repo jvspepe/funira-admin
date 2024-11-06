@@ -1,5 +1,5 @@
-import { TCategory } from "@/@types/category";
 import { TableCell, TableRow } from "@/components/ui/table";
+import { TCategory } from "@/@types/category";
 
 type Props = {
   category: TCategory;

@@ -15,9 +15,9 @@ import { TProduct } from "@/@types/product";
 import { converter, getRandomNumber } from "@/lib/utils";
 import { deleteImage } from "../storage/upload-image";
 
-export async function createProduct(
+export const createProduct = async (
   product: Omit<TProduct, "rating" | "sales" | "createdAt">,
-) {
+) => {
   try {
     await setDoc(
       doc(firestore, "products", product.uid).withConverter(
@@ -33,9 +33,9 @@ export async function createProduct(
   } catch (error) {
     throw error;
   }
-}
+};
 
-export async function getProduct(productUID: string): Promise<TProduct> {
+export const getProduct = async (productUID: string): Promise<TProduct> => {
   try {
     const product = await getDoc(
       doc(firestore, "products", productUID).withConverter(
@@ -43,19 +43,32 @@ export async function getProduct(productUID: string): Promise<TProduct> {
       ),
     );
 
-    if (!product.exists()) {
-      throw new Error("Produto não existe.");
-    } else {
-      return product.data();
-    }
+    if (!product.exists()) throw new Error("Produto não existe.");
+
+    return product.data();
   } catch (error) {
     throw error;
   }
-}
+};
 
-export async function getAllProducts(
+export const deleteProduct = async (product: TProduct) => {
+  try {
+    await Promise.all([
+      deleteDoc(
+        doc(firestore, "products", product.uid).withConverter(
+          converter<TProduct>(),
+        ),
+      ),
+      product.images.map((image) => deleteImage(image)),
+    ]);
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getAllProducts = async (
   constraints: QueryNonFilterConstraint[] = [],
-) {
+) => {
   const databaseProducts: TProduct[] = [];
 
   let lastDocument: QueryDocumentSnapshot<TProduct>;
@@ -80,19 +93,4 @@ export async function getAllProducts(
   }
 
   return { databaseProducts, lastDocument, isLastDocument };
-}
-
-export async function deleteProduct(product: TProduct) {
-  try {
-    await Promise.all([
-      deleteDoc(
-        doc(firestore, "products", product.uid).withConverter(
-          converter<TProduct>(),
-        ),
-      ),
-      product.images.map((image) => deleteImage(image)),
-    ]);
-  } catch (error) {
-    throw error;
-  }
-}
+};

@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from "react";
+import { nanoid } from "nanoid";
 import { z } from "zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,9 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Dispatch, SetStateAction } from "react";
-import { createCategory } from "@/lib/firebase/firestore/categories";
-import { nanoid } from "nanoid";
+import { createCategory } from "@/firebase/categories";
 
 const formSchema = z.object({
   label: z.string(),

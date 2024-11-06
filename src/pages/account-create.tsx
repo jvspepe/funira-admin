@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Link, useNavigate } from "react-router-dom";
 import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -15,7 +15,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { ChevronLeftIcon, ReloadIcon } from "@radix-ui/react-icons";
-import { createUser } from "@/lib/firebase/auth/create-user";
+import useAuth from "@/contexts/auth/use-auth";
+import { createUser } from "@/firebase/users";
 
 const formSchema = z
   .object({
@@ -34,10 +35,13 @@ const formSchema = z
     }
   });
 
+type FormSchema = z.infer<typeof formSchema>;
+
 const AccountCreate = () => {
+  const { currentUser } = useAuth();
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       displayName: "",
@@ -47,8 +51,11 @@ const AccountCreate = () => {
     },
   });
 
-  const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (data) => {
-    const { displayName, email, password } = data;
+  const onSubmit: SubmitHandler<FormSchema> = async ({
+    displayName,
+    email,
+    password,
+  }) => {
     setLoading(true);
     try {
       await createUser(displayName, email, password);
@@ -59,6 +66,10 @@ const AccountCreate = () => {
     form.reset();
     setLoading(false);
   };
+
+  useEffect(() => {
+    if (currentUser) navigate("/dashboard");
+  }, [currentUser]);
 
   return (
     <div className="container mx-auto flex h-screen items-center justify-center">
@@ -87,7 +98,7 @@ const AccountCreate = () => {
                 name="displayName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Username</FormLabel>
+                    <FormLabel>Nome de Usuário</FormLabel>
                     <FormControl>
                       <Input placeholder="Fulano de tal..." {...field} />
                     </FormControl>
@@ -130,7 +141,7 @@ const AccountCreate = () => {
                 name="confirmPassword"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Confirm Password</FormLabel>
+                    <FormLabel>Confirmar Senha</FormLabel>
                     <FormControl>
                       <Input
                         type="password"

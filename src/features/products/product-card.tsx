@@ -6,8 +6,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { TProduct } from "@/@types/product";
-import { Button } from "../../components/ui/button";
-import { deleteProduct } from "@/lib/firebase/firestore/products";
+import { Button } from "@/components/ui/button";
+import { deleteProduct } from "@/firebase/products";
 
 type Props = {
   product: TProduct;

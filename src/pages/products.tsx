@@ -1,28 +1,33 @@
-import { useEffect, useState } from "react";
-import { getAllProducts } from "@/lib/firebase/firestore/products";
-import { TProduct } from "@/@types/product";
-import ProductCard from "@/features/products/product-card";
+import { Link, Outlet } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import PageHeader from "@/components/PageHeader";
-import AddProduct from "@/features/products/add-product";
 
 const Products = () => {
-  const [products, setProducts] = useState<TProduct[]>([]);
-
-  useEffect(() => {
-    getAllProducts().then(({ databaseProducts }) =>
-      setProducts(databaseProducts),
-    );
-  }, []);
-
   return (
-    <div className="container mx-auto">
-      <PageHeader title="Produtos" />
-      <AddProduct />
-      <div className="grid grid-cols-4 gap-4 pb-8">
-        {products.map((product) => (
-          <ProductCard key={product.uid} product={product} />
-        ))}
+    <div className="flex flex-col gap-5 p-5 md:px-5">
+      <div className="flex items-center justify-between md:justify-normal md:gap-5">
+        <PageHeader title="Produtos" />
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost">Opções</Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuItem asChild>
+              <Link to="/dashboard/produtos">Ver produtos</Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link to="/dashboard/produtos/adicionar">Adicionar produto</Link>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
+      <Outlet />
     </div>
   );
 };

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -8,7 +9,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import AddCategoryForm from "./add-category-form";
-import { useState } from "react";
 
 export default function AddCategory() {
   const [openDialog, setOpenDialog] = useState<boolean>(false);

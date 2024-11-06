@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { DefaultValues, SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,9 +21,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { createProduct } from "@/lib/firebase/firestore/products";
-import { getImageURL, uploadImage } from "@/lib/firebase/storage/upload-image";
-import { getAllCategories } from "@/lib/firebase/firestore/categories";
+import { createProduct } from "@/firebase/products";
+import { getImageURL, uploadImage } from "@/firebase/storage/upload-image";
+import { getAllCategories } from "@/firebase/categories";
 import { TCategory } from "@/@types/category";
 
 const formSchema = z.object({
@@ -52,11 +52,7 @@ const defaultValues: DefaultValues<z.infer<typeof formSchema>> = {
   images: null,
 };
 
-type Props = {
-  setOpenDialog: Dispatch<SetStateAction<boolean>>;
-};
-
-const AddProductForm = ({ setOpenDialog }: Props) => {
+const AddProductForm = () => {
   const [categories, setCategories] = useState<TCategory[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [imagesPreview, setImagesPreview] = useState<string[]>();
@@ -98,7 +94,6 @@ const AddProductForm = ({ setOpenDialog }: Props) => {
 
     form.reset(defaultValues);
     setLoading(false);
-    setOpenDialog(false);
   };
 
   useEffect(() => {

@@ -9,10 +9,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import CategoryCard from "@/features/categories/category-card";
-import { getAllCategories } from "@/lib/firebase/firestore/categories";
+import { getAllCategories } from "@/firebase/categories";
 import AddCategory from "@/features/categories/add-category";
 
-export default function Categories() {
+const Categories = () => {
   const [categories, setCategories] = useState<TCategory[]>();
   useEffect(() => {
     getAllCategories()
@@ -42,4 +42,6 @@ export default function Categories() {
       </Table>
     </div>
   );
-}
+};
+
+export default Categories;

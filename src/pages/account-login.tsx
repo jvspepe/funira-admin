@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -15,17 +15,21 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { ChevronLeftIcon, ReloadIcon } from "@radix-ui/react-icons";
-import { loginUser } from "@/lib/firebase/auth/login-user";
+import useAuth from "@/contexts/auth/use-auth";
+import { loginUser } from "@/firebase/users";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid e-mail" }),
   password: z.string().min(8, { message: "Minimum 8 characters" }),
 });
 
+type FormSchema = z.infer<typeof formSchema>;
+
 const AccountLogin = () => {
+  const { currentUser } = useAuth();
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
@@ -33,8 +37,7 @@ const AccountLogin = () => {
     },
   });
 
-  const onSubmit: SubmitHandler<z.infer<typeof formSchema>> = async (data) => {
-    const { email, password } = data;
+  const onSubmit: SubmitHandler<FormSchema> = async ({ email, password }) => {
     setLoading(true);
     try {
       await loginUser(email, password);
@@ -45,6 +48,10 @@ const AccountLogin = () => {
     form.reset();
     setLoading(false);
   };
+
+  useEffect(() => {
+    if (currentUser) navigate("/dashboard");
+  }, [currentUser]);
 
   return (
     <div className="container mx-auto flex h-screen items-center justify-center">
